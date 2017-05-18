@@ -1,19 +1,28 @@
 # /usr/bin/env python3
 # coding: utf-8
 
+import requests
 from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer
+from flask import Flask
 
-chatBot = ChatBot('wxChatBot')
+from wxbot import WXBot
+
+app = Flask(__name__)
+
+chatBot = ChatBot('ChatBot')
 chatBot.set_trainer(ChatterBotCorpusTrainer)
 chatBot.train('chatterbot.corpus.chinese')
 
 
+@app.route('/chatBot/<input>')
+def chatBotFun(input):
+    response = chatBot.get_response(input).text
+    return response
+
+
 def main():
-    print(chatBot.get_response('你好'))
-    print(chatBot.get_response('你是谁'))
-    print(chatBot.get_response('谢谢'))
-    print(chatBot.get_response('复杂优于晦涩.'))
+    app.run(debug=True)
 
 
 if __name__ == '__main__':
