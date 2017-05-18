@@ -1,12 +1,10 @@
-# /usr/bin/env python3
+# /usr/bin/env python
 # coding: utf-8
 
-import requests
+from flask import Flask, request
 from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer
-from flask import Flask
 
-from wxbot import WXBot
 
 app = Flask(__name__)
 
@@ -15,9 +13,9 @@ chatBot.set_trainer(ChatterBotCorpusTrainer)
 chatBot.train('chatterbot.corpus.chinese')
 
 
-@app.route('/chatBot/<input>')
-def chatBotFun(input):
-    response = chatBot.get_response(input).text
+@app.route('/chatBot')
+def chatBotResponse():
+    response = chatBot.get_response(request.args.get('user_input')).text
     return response
 
 
